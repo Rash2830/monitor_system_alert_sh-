@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Monitor Disk Usage
+EMAIL="rashedulmorshed98@gmail.com"
+DISK_THRESHOLD=80  # Disk usage percentage threshold
+PARTITION="/"      # Partition to monitor (e.g., root "/")
+
+# Get disk usage percentage for the specified partition (without % sign)
+DISK_USAGE=$(df -h "$PARTITION" | awk 'NR==2 {print $5}' | sed 's/%//')
+
+# Show current disk usage
+echo "Current Disk Usage on $PARTITION: $DISK_USAGE%"
+
+# Send alert if disk usage is above threshold
+if [ "$DISK_USAGE" -gt "$DISK_THRESHOLD" ]; then
+    echo "Disk usage on $PARTITION is above threshold! Current usage: $DISK_USAGE%" | mail -s "Disk Alert on $(hostname)" $EMAIL
+fi

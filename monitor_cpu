@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Monitor CPU
+EMAIL="rashedulmorshed98@gmail.com"
+CPU_THRESHOLD=80    # CPU usage %
+
+# ----- Get CPU Usage -----
+CPU_USAGE=$(top -bn1 | grep "Cpu(s)" | awk '{print 100 - $8}')
+CPU_USAGE_INT=${CPU_USAGE%.*}
+
+# Display current usage
+echo "Current CPU Usage: $CPU_USAGE_INT%"
+
+# Check and send alert if above threshold
+if [ "$CPU_USAGE_INT" -gt "$CPU_THRESHOLD" ]; then
+    echo "CPU usage is above threshold! Current: $CPU_USAGE_INT%" | mail -s "CPU Alert on $(hostname)" $EMAIL
+fi

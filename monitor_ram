@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Monitor RAM only
+EMAIL="rashedulmorshed98@gmail.com"
+RAM_THRESHOLD=80    # RAM usage %
+
+# Get RAM usage percentage
+RAM_TOTAL=$(free -m | awk '/^Mem:/ {print $2}')
+RAM_USED=$(free -m | awk '/^Mem:/ {print $3}')
+RAM_USAGE=$(( RAM_USED * 100 / RAM_TOTAL ))
+
+# Show current RAM usage
+echo "Current RAM Usage: $RAM_USAGE%"
+
+# Send alert if RAM usage is above threshold
+if [ "$RAM_USAGE" -gt "$RAM_THRESHOLD" ]; then
+    echo "RAM usage is above threshold! Current usage: $RAM_USAGE%" | mail -s "RAM Alert on $(hostname)" $EMAIL
+fi
